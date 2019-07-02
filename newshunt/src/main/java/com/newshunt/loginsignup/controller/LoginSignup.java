@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.newshunt.daomodel.Signup;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 @Controller
 public class LoginSignup {
 
@@ -24,25 +26,27 @@ public class LoginSignup {
 
 @RequestMapping("/login")
 @ResponseBody
-public  byte signup(@RequestBody Signup rec)
+public  byte signup(@RequestBody Signup r,HttpSession session)
 {
 		try
 		{
 			byte flag=0;
+			String un ="";
 			Configuration cfg = new Configuration();
 			cfg.configure("hibernate.cfg.xml");
-			SessionFactory session= cfg.buildSessionFactory();
-	        Session ss = session.openSession();
+			SessionFactory sf= cfg.buildSessionFactory();
+	        Session ss = sf.openSession();
 	        Criteria cr= ss.createCriteria(Signup.class);
-	        List<Signup>p=cr.list();
-	        for(Signup m:p)
+	        List<Signup>z=cr.list();
+	        for(Signup m:z)
 	        {
-	        	if(m.getEmail().equals(rec.getEmail())&& m.getPassword().equals(rec.getPassword()))
+	        	if(r.getEmail().equals(m.getEmail())&& r.getPassword().equals(m.getPassword()))
 	        	{
+	        		un = r.getEmail();
 	        		flag=1;
 	        	}
 	        }
-	        		
+	        session .setAttribute("un", un);		
 			return flag;
 		}
 	 catch(Exception e) 

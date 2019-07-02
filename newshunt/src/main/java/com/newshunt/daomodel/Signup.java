@@ -17,6 +17,20 @@ public class Signup {
     String confirmPassword;
     @Column(name="phone_no")
     String phone;
+    String mychannel;
+    String favourities;
+	public String getFavourities() {
+		return favourities;
+	}
+	public void setFavourities(String favourities) {
+		this.favourities = favourities;
+	}
+	public String getMychannel() {
+		return mychannel;
+	}
+	public void setMychannel(String mychannel) {
+		this.mychannel = mychannel;
+	}
 	public String getEmail() {
 		return email;
 	}

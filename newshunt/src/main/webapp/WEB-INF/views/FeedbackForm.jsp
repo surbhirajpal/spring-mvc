@@ -14,7 +14,8 @@
      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
     <script>
               var m = angular.module("newshunt",[]);
-              m.controller("MenuController",function($scope , $http, $window){
+              m.controller("MenuController",function($scope , $http, $window)
+            {
               	$scope.menuData=function()
               	{
 					$http.post("menuList").then(function(resp)
@@ -22,13 +23,21 @@
         				$scope.menuData = resp.data;
         				
         			});
-					$http.post("news").then(function(res)
-							{
-						$scope.news=res.data;
-						
-							});
+					
+
               	 }
-              });
+              	$scope.feed=function()
+              	{
+              		data={email : $scope.email , subject : $scope.subject , querry : $scope.querry};
+              		$http.post("addFeedback",data).then(function(response)
+              				{
+              					alert("Feedback Saved!")
+              			
+              				});
+              	}
+              	
+              	
+             });
               
      </script> 	
     <style>
@@ -91,9 +100,9 @@
 		  height : 100%;
 		  width :80%;
 		  position: fixed;
-		    z-index: 1;
-		    top: 0;
-		    overflow-x: hidden;
+		  z-index: 1;
+		  top: 0;
+		   overflow-x: hidden;
 		    padding-top: 20px;
 		  
 		  right:0;
@@ -119,14 +128,13 @@
 		    
 		
 		  }
-		  
-		  
 .centered2 
 {
     position: absolute;
     left: 20%;
     text-align: center;
 }		  
+		  
 		  
 .add_channel_descripton
 {
@@ -155,10 +163,26 @@
     padding-left : 50px
 
 }
+.add_channel_click
+{
+    position:sticky;
+    top : 0;
+    background-color: white; 
+    color:rgba(40,57,101); 
+    border: 2px solid rgba(40,57,101);
+    font: 'Open Sans',sans-serif;
+    font-size: 15px;
+    padding:10px;
+    
+}
+.add_channel_click:hover
+{
+    background-color:rgba(40,57,101);
+    color: white;
+}
 
-		  
-		  
-		  
+
+ 
 		</style>
 	</head>
 	<body ng-app="newshunt">
@@ -191,20 +215,33 @@
         	</div>
         <div class="right">
             <div class="centered2">
-            <br><br><br>
-                <div class ="module" ng-repeat="x in news">
-                  	<div class="border_to_div">
             
-                        <label class="add_channel_heading">{{x.channelName}}</label><br>
-                        <br>
-                        <label class="add_channel_descripton">{{x.title}}</label><br><br>
-                        {{x.link}}<br>
-                        {{x.date}}
-              
-                        
+	            <br><br><br>
+                <div class ="module">
+                  	<div class="border_to_div">
+                  	
+                  
+                  		<label class="label">USERNAME</label><br>
+                  		<input class="input" ng-model="email">
+                  		<br><br><br>
+                  		
+                  		<!-- 
+                  		<label class="label">USERNAME</label>
+                  		<input class="input" >
+                  		<br>
+                  		-->
+                  	
+                  		<label class="label"> SUBJECT</label><br>
+                  		<input class="input" ng-model="subject">
+                  		<br><br><br>
+                  
+                  		<label class="label">QUERRY</label><br>
+                  		<textarea rows="4" cols="50" ng-model="querry"></textarea>
+                  		
+                  		
+            			<br><br><br>
+                        <button align="right" class="btn btn-default add_channel_click" ng-click="feed()">SUBMIT</button>
                     </div><br><br><br>
-                
-                    
                 </div>
             </div>
         </div>

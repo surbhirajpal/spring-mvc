@@ -12,18 +12,21 @@
       <link rel="stylesheet" href="style.css">
       <script>
               var m = angular.module("newshunt",[]);
-              m.controller("userInfo",function($scope , $http, $window){
+              m.controller("userInfo",function($scope , $http, $window)
+            	{
             	  
-            	$scope.saveInfo = function(){
-            		
-            		data = {name:$scope.name , email:$scope.email , password:$scope.password , confirmPassword:$scope.cpassword ,phone:$scope.phno};
-            	    $http.post("signup",data).then(function(response){
-            	    	
-            	    	  alert("record inserted");
-            	    		
-            	    	
-            	    });	
-            	}
+            		$scope.saveInfo = function()
+            		{
+	            		console.log($scope.email);
+	            		data = {name:$scope.name , email:$scope.email , password:$scope.password , confirmPassword:$scope.cpassword ,phone:$scope.phno};
+	            	    $http.post("signup",data).then(function(response)
+	            	    {
+	            	    	
+	            	    	  alert("record inserted");
+	            	    		
+	            	    	
+	            	    });	
+            		}
             	$scope.login=function()
             	{
             		rec={email:$scope.login_username,password : $scope.login_password}

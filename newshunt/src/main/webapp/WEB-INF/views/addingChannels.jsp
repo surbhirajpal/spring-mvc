@@ -14,7 +14,8 @@
      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
     <script>
               var m = angular.module("newshunt",[]);
-              m.controller("MenuController",function($scope , $http, $window){
+              m.controller("MenuController",function($scope , $http, $window)
+            {
               	$scope.menuData=function()
               	{
 					$http.post("menuList").then(function(resp)
@@ -22,13 +23,40 @@
         				$scope.menuData = resp.data;
         				
         			});
-					$http.post("news").then(function(res)
-							{
-						$scope.news=res.data;
-						
-							});
+					$http.post("channelList").then(function(req)
+					{
+							$scope.addchannel = req.data;
+					
+					});
+
+
               	 }
-              });
+              	
+              	$scope.suscribe=function()
+              	{
+                    var i;
+                    var m = "";
+      		      	for(i=0 ; i<$scope.addchannel.length;i++)
+      		      	{
+      		    	    if($scope.addchannel[i].selected==true)
+      		    	    {
+      		    	      m=m+$scope.addchannel[i].id+","; 	
+      		    	    }
+      		      	}
+      			  	rec = {mychannel:m}
+      				$http({
+      						url:"suscribe",
+      						method:"post",
+      						data:rec
+      					  }).then(function(res){
+      			     			alert("channels are subscribed");
+      			 			});
+      				
+      		 	}
+              	
+              	
+              	
+             });
               
      </script> 	
     <style>
@@ -91,9 +119,9 @@
 		  height : 100%;
 		  width :80%;
 		  position: fixed;
-		    z-index: 1;
-		    top: 0;
-		    overflow-x: hidden;
+		  z-index: 1;
+		  top: 0;
+		   overflow-x: hidden;
 		    padding-top: 20px;
 		  
 		  right:0;
@@ -126,8 +154,9 @@
     position: absolute;
     left: 20%;
     text-align: center;
-}		  
+}
 		  
+				  
 .add_channel_descripton
 {
     font: 'Open Sans',sans-serif;
@@ -155,10 +184,26 @@
     padding-left : 50px
 
 }
+.add_channel_click
+{
+    position:sticky;
+    top : 0;
+    background-color: white; 
+    color:rgba(40,57,101); 
+    border: 2px solid rgba(40,57,101);
+    font: 'Open Sans',sans-serif;
+    font-size: 15px;
+    padding: 5px;
+    
+}
+.add_channel_click:hover
+{
+    background-color:rgba(40,57,101);
+    color: white;
+}
 
-		  
-		  
-		  
+
+ 
 		</style>
 	</head>
 	<body ng-app="newshunt">
@@ -191,20 +236,21 @@
         	</div>
         <div class="right">
             <div class="centered2">
-            <br><br><br>
-                <div class ="module" ng-repeat="x in news">
+            
+	            <br><br><br>
+	             <button align="right" class="btn btn-default add_channel_click" ng-click="suscribe()">SUBSCRIBE</button>
+                <br><br><br>
+                <div class ="module" ng-repeat="x in addchannel">
+            
                   	<div class="border_to_div">
             
-                        <label class="add_channel_heading">{{x.channelName}}</label><br>
+                        <img src="{{x.image}}"align="left" height="100" width="100">
+                        <label class="add_channel_heading">{{x.title}}</label><br>
                         <br>
-                        <label class="add_channel_descripton">{{x.title}}</label><br><br>
-                        {{x.link}}<br>
-                        {{x.date}}
-              
+                        <label class="add_channel_descripton">{{x.description}}</label><br><br>
+                        <input id="check" type="checkbox" class="check" ng-model="x.selected">
                         
                     </div><br><br><br>
-                
-                    
                 </div>
             </div>
         </div>

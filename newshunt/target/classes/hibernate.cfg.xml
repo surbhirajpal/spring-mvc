@@ -1,6 +1,5 @@
-<!DOCTYPE hibernate-configuration PUBLIC
-	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<!DOCTYPE hibernate-configuration SYSTEM 
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 	
 	
 	<hibernate-configuration>
@@ -30,7 +29,8 @@
       <!-- List of XML mapping files -->
       <mapping class = "com.newshunt.daomodel.Signup"/>
       <mapping class = "com.newshunt.daomodel.MenuDao"/>
-      
+      <mapping class = "com.newshunt.daomodel.AddingChannel"/>
+      <mapping class = "com.newshunt.daomodel.feedbackDao"/>
       
    </session-factory>
 </hibernate-configuration>
