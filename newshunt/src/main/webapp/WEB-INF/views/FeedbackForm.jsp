@@ -23,6 +23,12 @@
         				$scope.menuData = resp.data;
         				
         			});
+					$http.post("fetchMyInfo").then(function(resp)
+							{
+									$scope.userData=resp.data;						
+						
+							});
+						
 					
 
               	 }
@@ -108,6 +114,10 @@
 		  right:0;
 		  color : black;
 		
+		}
+		.nav-link
+		{
+			text-transform : uppercase;
 		}
 		
 		
@@ -197,7 +207,7 @@
         
         		<ul class="nav navbar-nav navbar-right ">
             		<li class="nav-item">
-               				<a class="nav-link" href="#">SURBHI</a>
+               				<a class="nav-link" href="#">{{userData.name}}</a>
             		</li>
         		</ul>
     		</nav>

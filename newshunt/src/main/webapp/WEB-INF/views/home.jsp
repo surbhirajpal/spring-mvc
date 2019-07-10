@@ -23,10 +23,16 @@
         				
         			});
 					$http.post("news").then(function(res)
-							{
+					{
 						$scope.news=res.data;
 						
-							});
+					});
+					$http.post("fetchMyInfo").then(function(resp)
+					{
+						$scope.userData=resp.data;						
+						
+					});
+					
               	 }
               });
               
@@ -42,6 +48,10 @@
 		{
 		  color: aliceblue;
 		  font-size: large
+		}
+		.nav-link
+		{
+			text-transform : uppercase;
 		}
 		
 		body
@@ -173,7 +183,7 @@
         
         		<ul class="nav navbar-nav navbar-right ">
             		<li class="nav-item">
-               				<a class="nav-link" href="#">SURBHI</a>
+               				<a class="nav-link" href="#">{{userData.name}}</a>
             		</li>
         		</ul>
     		</nav>
@@ -197,8 +207,8 @@
             
                         <label class="add_channel_heading">{{x.channelName}}</label><br>
                         <br>
-                        <label class="add_channel_descripton">{{x.title}}</label><br><br>
-                        {{x.link}}<br>
+                        <a href={{x.link}} class="add_channel_descripton">{{x.title}}</label><br>
+                        <br></a>
                         {{x.date}}
               
                         

@@ -44,24 +44,95 @@ public class ChannelManagement
 	
 	@RequestMapping(value="/channelList" ,method = RequestMethod.POST)
 	@ResponseBody
-	public List<AddingChannel> addChannels()
-	{	   Configuration cfg = new Configuration();
+	public List<AddingChannel> addChannels(HttpSession session)
+	{
+		String email=session.getAttribute("un").toString();
+		Configuration cfg = new Configuration();
 		   cfg.configure("hibernate.cfg.xml");
 		   SessionFactory sf = cfg.buildSessionFactory();
 	       Session ss = sf.openSession();
-	       Criteria cr = ss.createCriteria(AddingChannel.class);
-	       List<AddingChannel>p=cr.list();
-		   if(p.isEmpty()!=true) 
-		   {
-			    return p;  
-		   }
-		   
-		 return null;  
+	       Criteria cc = ss.createCriteria(Signup.class);
+	       cc.add(Restrictions.eq("email",email));
+	       Signup UA=(Signup)cc.uniqueResult();
+			String channel = UA.getMychannel();
+			if(channel != null)
+			{
+				String m[]=channel.split(",");
+				ArrayList<Integer>al=new ArrayList();
+				for(String z:m)
+				{
+					al.add(Integer.parseInt(z));
+
+				}
+				cc=ss.createCriteria(AddingChannel.class);
+				cc.add(Restrictions.not(Restrictions.in("id",al)));
+				List<AddingChannel>suscribeChannel= cc.list();
+				if(suscribeChannel.isEmpty()!=true)
+				{
+					return suscribeChannel;
+				}
+				else
+				{
+					return null;
+				}
+
+				
+			}
+			else
+			{
+				cc=ss.createCriteria(AddingChannel.class);
+				List<AddingChannel>suscribeChannel=cc.list();
+				if(suscribeChannel.isEmpty()!=true)
+				{
+					return suscribeChannel;
+					
+				}
+				else
+				{
+					return null;
+				}
+				
+			}  
 	 }
 	
 	@RequestMapping(value="/suscribe", method = RequestMethod.POST)
 	@ResponseBody
 	public void suscribe(@RequestBody Signup r , HttpSession session)
+	{
+    	try
+    	{
+    	   String un = session.getAttribute("un").toString();
+    	   Configuration cfg= new Configuration();
+	       cfg.configure("hibernate.cfg.xml");
+	       SessionFactory sf = cfg.buildSessionFactory();
+	       Session ss = sf.openSession();
+	       Criteria criteria = ss.createCriteria(Signup.class);
+	       criteria.add(Restrictions.eq("email", un));
+           Signup rec = (Signup)criteria.uniqueResult();	       
+	       String z=rec.getMychannel();
+	       if(z!=null)
+	       {
+	    	   String x=r.getMychannel();
+	    	   String n=z.concat(x);
+	    	   rec.setMychannel(n);
+	       }
+	       else
+	       {
+	    	   rec.setMychannel(r.getMychannel());
+	       }
+	       ss.update(rec);
+	       ss.beginTransaction().commit();
+	      
+    	}
+    	catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+   }
+	
+	@RequestMapping(value="/unsuscribe", method = RequestMethod.POST)
+	@ResponseBody
+	public void unsuscribe(@RequestBody Signup r , HttpSession session)
 	{
     	try
     	{
@@ -85,6 +156,9 @@ public class ChannelManagement
     	}
    }
 	
+	
+	
+	
 	@RequestMapping("/my_channels")
 	public  String myChannels() 
 	{
@@ -106,6 +180,20 @@ public class ChannelManagement
 		cc.add(Restrictions.eq("email",email));
 		Signup UA=(Signup)cc.uniqueResult();
 		String channel = UA.getMychannel();
+		String m[]=channel.split(",");
+		ArrayList<Integer>al=new ArrayList();
+		for(String z:m)
+		{
+			al.add(Integer.parseInt(z));
+
+		}
+		cc=ss.createCriteria(AddingChannel.class);
+		cc.add(Restrictions.in("id",al));
+		List<Signup>suscribeChannel= cc.list();
+		return suscribeChannel;
+
+	}
+		/*
 		if(channel != null)
 		{
 			String m[]=channel.split(",");
@@ -116,7 +204,7 @@ public class ChannelManagement
 
 			}
 			cc=ss.createCriteria(AddingChannel.class);
-			cc.add(Restrictions.in("id",al));
+			cc.add(Restrictions.not(Restrictions.in("id",al)));
 			List<Signup>suscribeChannel= cc.list();
 			if(suscribeChannel.isEmpty()!=true)
 			{
@@ -145,7 +233,7 @@ public class ChannelManagement
 			
 		}
 	}
-		
+		*/
 		
 		/*
 		String m[]=channel.split(",");
@@ -179,6 +267,34 @@ public class ChannelManagement
 	       Session ss = sf.openSession();
 	       Criteria criteria = ss.createCriteria(Signup.class);
 	       criteria.add(Restrictions.eq("email", email));
+	       Signup rec = (Signup)criteria.uniqueResult();	       
+	       String z=rec.getFavourities();
+	       if(z!=null)
+	       {
+	    	   String x=r.getFavourities();
+	    	   String n=z.concat(x);
+	    	   rec.setFavourities(n);
+	       }
+	       else
+	       {
+	    	   rec.setFavourities(r.getFavourities());
+	       }
+	       ss.update(rec);
+	       ss.beginTransaction().commit();
+	      
+    	}
+    	catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+	}
+	       
+	       
+	       
+	       
+	       
+	       /*
+	       
            Signup rec = (Signup)criteria.uniqueResult();	       
 	       rec.setFavourities(r.getFavourities());
 	       ss.update(rec);
@@ -189,6 +305,7 @@ public class ChannelManagement
     		e.printStackTrace();
     	}
    }
+   */
 	
 	@RequestMapping("/favourities")
 	public  String favourities() {

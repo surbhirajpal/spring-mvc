@@ -1,6 +1,7 @@
 package com.newshunt.daomodel;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,6 +10,7 @@ import javax.persistence.Table;
 public class feedbackDao 
 {
 	@Id
+	@GeneratedValue
 	int id;
 	public int getId() {
 		return id;

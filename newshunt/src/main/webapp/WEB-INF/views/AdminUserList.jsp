@@ -14,79 +14,59 @@
      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
     <script>
               var m = angular.module("newshunt",[]);
-              m.controller("MenuController",function($scope , $http)
-            {
+              m.controller("MenuController",function($scope , $http, $window){
               	$scope.menuData=function()
               	{
-					$http.post("menuList").then(function(resp)
+					$http.post("AdminMenuList").then(function(resp)
 					{	
         				$scope.menuData = resp.data;
         				
         			});
-					$http.post("myChannelList").then(function(req)
-					{
-							$scope.my_Channel_List = req.data;
-							console.log($scope.my_Channel_List);
 					
+					$http.post("fetchMyInfo").then(function(resp)
+					{
+						$scope.userData=resp.data;						
+						
 					});
-
-
+					$http.post("FetchUserList").then(function(resp)
+					{
+						$scope.userList=resp.data;
+					});
+					
               	 }
-              	$scope.unsuscribe=function()
+              	
+              	$scope.del=function(x)
               	{
-                    var i;
-                    var m = "";
-      		      	for(i=0 ; i<$scope.my_Channel_List.length;i++)
-      		      	{
-      		    	    if($scope.my_Channel_List[i].selected!=true)
-      		    	    {
-      		    	      m=m+$scope.my_Channel_List[i].id+","; 	
-      		    	    }
-      		      	}
-      			  	rec = {mychannel:m}
-      				$http({
-      						url:"unsuscribe",
-      						method:"post",
-      						data:rec
-      					  }).then(function(res){
-    						  	console.log(rec);
-      			     			alert("channels are unsubscribed");
-      			 			});
-      				
-      		 	}
-              	$scope.favourities=function()
-              	{
-              		var i;
-                    var m = "";
-      		      	for(i=0 ; i<$scope.my_Channel_List.length;i++)
-      		      	{
-      		    	    if($scope.my_Channel_List[i].selected==true)
-      		    	    {
-      		    	      m=m+$scope.my_Channel_List[i].id+","; 	
-      		    	    }
-      		      	}
-      			  	rec = {favourities:m}
-      				$http({
-      						url:"addFavourities",
-      						method:"post",
-      						data:rec
-      					  }).then(function(res){
-    						  	console.log(rec);
-      			     			alert("channels added to favourities");
-      			 			});
-      			
+              		$http.post("deleteUser",x).then(function(resp)
+              				{
+              					alert(" User Record Deleted!!")
+              				});
               		
+              	}
+              	$scope.update=function(selectRecord)
+              	{
+              		$scope.rec=selectRecord;
+              		$('#myModal').modal('show');
               	}
               	
               	
-                            	
-             });
+              	$scope.saveUpdateInfo=function(rec)
+              	{
+              		$http.post("updateUserInfo",rec).then(function(resp)
+       				{
+       							alert("User Record Changed!!!")
+       						
+       				});
+              	}
+              	
+              	
+              });
               
      </script> 	
     <style>
         .navbar-expand-sm
 		{
-		  background-color:rgba(40,57,101);
+		  background-color:rgb(128,0,0);
 		  position: fixed;
 		}
 		.nav.navbar-nav.navbar-right li a,
@@ -94,6 +74,10 @@
 		{
 		  color: aliceblue;
 		  font-size: large
+		}
+		.nav-link
+		{
+			text-transform : uppercase;
 		}
 		
 		body
@@ -132,7 +116,7 @@
 		    top: 0;
 		    overflow-x: hidden;
 		    padding-top: 20px;
-		  background:rgba(40,57,101,.8);
+		  background:rgb(128,0,0,.8);
 		
 		
 		}
@@ -141,11 +125,11 @@
 		{
 		  
 		  height : 100%;
-		  width :80%;
+		  width :90%;
 		  position: fixed;
-		  z-index: 1;
-		  top: 0;
-		   overflow-x: hidden;
+		    z-index: 1;
+		    top: 0;
+		    overflow-x: hidden;
 		    padding-top: 20px;
 		  
 		  right:0;
@@ -161,6 +145,7 @@
 		
 		
 		}
+		
 		.centered {
 		    position: absolute;
 		    top: 50%;
@@ -171,6 +156,8 @@
 		    
 		
 		  }
+		  
+		  
 .centered2 
 {
     position: absolute;
@@ -178,13 +165,12 @@
     text-align: center;
 }		  
 		  
-		  
 .add_channel_descripton
 {
     font: 'Open Sans',sans-serif;
     font-size: 20px;
     text-align: center;
-    color: rgba(40,57,101);
+    color: rgb(128,0,0);
     padding-top: 5px;
     padding-top: 5px;
     padding-left : 50px
@@ -200,7 +186,7 @@
     font: 'Open Sans',sans-serif;
     font-size: 40px;
     text-align: center;
-    color: rgba(40,57,101);
+    color: rgb(128,0,0);
     padding-top: 5px;
     padding-top: 5px;
     padding-left : 50px
@@ -211,21 +197,29 @@
     position:sticky;
     top : 0;
     background-color: white; 
-    color:rgba(40,57,101); 
-    border: 2px solid rgba(40,57,101);
+    color:rgb(128,0,0); 
+    border: 2px solid rgb(128,0,0);
     font: 'Open Sans',sans-serif;
-    font-size: 15px;
-    padding:10px;
+    font-size: 10px;
+    padding:5px;
     
 }
 .add_channel_click:hover
 {
-    background-color:rgba(40,57,101);
+    background-color:rgb(128,0,0);
     color: white;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
 }
 
 
- 
+		  
+		  
+		  
 		</style>
 	</head>
 	<body ng-app="newshunt">
@@ -240,7 +234,7 @@
         
         		<ul class="nav navbar-nav navbar-right ">
             		<li class="nav-item">
-               				<a class="nav-link" href="#">SURBHI</a>
+               				<a class="nav-link" href="#">{{userData.name}}</a>
             		</li>
         		</ul>
     		</nav>
@@ -258,28 +252,81 @@
         	</div>
         <div class="right">
             <div class="centered2">
-            
-	            <br><br><br>
-	            
-	             <button align="right" class="btn btn-default add_channel_click" ng-click="unsuscribe()">UNSUBSCRIBE</button>
- 				<button align="right" class="btn btn-default add_channel_click"ng-click="favourities()">ADD FAVOURITIES</button>
-                               
-                <br><br><br>
-                <div class ="module" ng-repeat="x in my_Channel_List">
-            
-                  	<div class="border_to_div">
-            
-                        <img src="{{x.image}}"align="left" height="100" width="100">
-                        <label class="add_channel_heading">{{x.title}}</label><br>
-                        <br>
-                        <label class="add_channel_descripton">{{x.description}}</label><br><br>
-                        <input id="check" type="checkbox" class="check" ng-model="x.selected">
-                        
-                    </div><br><br><br>
+            <br><br><br>
+                <div class ="module" style="overflow-x:auto;">
+                  	<table class="table table-hover">
+					    <thead>
+					      <tr>
+					        <th>EMAIL</th>
+					        <th>NAME</th>
+					        <th>PASSWORD</th>
+					        <!--  
+					        <th>PHONE NUMBER</th>
+					        -->
+					        <th>SUBSCRIBED CHANNEL</th>
+					        <th>FAVOURITIES</th>
+					        <th>UPDATE</th>
+					        <th>DELETE</th>
+					      </tr>
+					    </thead>
+					    <tbody ng-repeat="x in userList">
+					      <tr>
+					        <td>{{x.email}}</td>
+					        <td>{{x.name}}</td>
+					        <td>{{x.password}}</td>
+					        <!--  
+					        <td>{{x.phone}}</td>
+					        -->
+					        <td>{{x.mychannel}}</td>
+					        <td>{{x.favourities}}</td>
+					        
+					        <td><button align="right" class="btn btn-default btn-info btn-lg add_channel_click" 
+					         data-toggle="modal" data-target="#myModal" ng-click="update(x)">UPDATE
+					        				        </button></td>
+					        
+					        <td><button align="right" class="btn btn-default add_channel_click" ng-click="del(x)">DELETE</button></td>
+					      </tr>
+					      
+					    </tbody>
+					  </table>     
+                    
                 </div>
             </div>
         </div>
     </div>
+    
+    
+        <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">UPDATE USER RECORD</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          EMAIL<input type="text" ng-model="rec.email"/><br><br>
+          NAME<input type="text" ng-model="rec.name"/><br><br>
+          PASSWORD<input type="text" ng-model="rec.password"/><br><br>
+          SUBSCRIBED CHANNEL<input type="text" ng-model="rec.mychannel"/><br><br>
+          FAVOURITIES<input type="text" ng-model="rec.favourities"/><br><br>
+          
+        </div>
+        <div class="modal-footer">
+        	<button type="button" class="btn btn-default add_channel_click" ng-click="saveUpdateInfo(rec)">UPDATE</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+    
+    
+    
+    
     </div>
 </body>
 </html>

@@ -26,11 +26,11 @@ public class LoginSignup {
 
 @RequestMapping("/login")
 @ResponseBody
-public  byte signup(@RequestBody Signup r,HttpSession session)
+public int signup(@RequestBody Signup r,HttpSession session)
 {
 		try
 		{
-			byte flag=0;
+			int flag=0;
 			String un ="";
 			Configuration cfg = new Configuration();
 			cfg.configure("hibernate.cfg.xml");
@@ -44,6 +44,11 @@ public  byte signup(@RequestBody Signup r,HttpSession session)
 	        	{
 	        		un = r.getEmail();
 	        		flag=1;
+	        	}
+	        	else if(r.getEmail().equals("admin@gmail.com")&& r.getPassword().equals("123"))
+	        	{
+	        		un = r.getEmail();
+	        		flag=2;
 	        	}
 	        }
 	        session .setAttribute("un", un);		

@@ -14,79 +14,42 @@
      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
     <script>
               var m = angular.module("newshunt",[]);
-              m.controller("MenuController",function($scope , $http)
-            {
+              m.controller("MenuController",function($scope , $http, $window){
               	$scope.menuData=function()
               	{
-					$http.post("menuList").then(function(resp)
+					$http.post("AdminMenuList").then(function(resp)
 					{	
         				$scope.menuData = resp.data;
         				
         			});
-					$http.post("myChannelList").then(function(req)
-					{
-							$scope.my_Channel_List = req.data;
-							console.log($scope.my_Channel_List);
 					
+					$http.post("fetchMyInfo").then(function(resp)
+					{
+						$scope.userData=resp.data;						
+						
 					});
-
-
+					$http.post("FetchFeedback").then(function(resp)
+					{
+						$scope.feedbackList=resp.data;
+					});
+			
               	 }
-              	$scope.unsuscribe=function()
+              	
+              	$scope.del=function(x)
               	{
-                    var i;
-                    var m = "";
-      		      	for(i=0 ; i<$scope.my_Channel_List.length;i++)
-      		      	{
-      		    	    if($scope.my_Channel_List[i].selected!=true)
-      		    	    {
-      		    	      m=m+$scope.my_Channel_List[i].id+","; 	
-      		    	    }
-      		      	}
-      			  	rec = {mychannel:m}
-      				$http({
-      						url:"unsuscribe",
-      						method:"post",
-      						data:rec
-      					  }).then(function(res){
-    						  	console.log(rec);
-      			     			alert("channels are unsubscribed");
-      			 			});
-      				
-      		 	}
-              	$scope.favourities=function()
-              	{
-              		var i;
-                    var m = "";
-      		      	for(i=0 ; i<$scope.my_Channel_List.length;i++)
-      		      	{
-      		    	    if($scope.my_Channel_List[i].selected==true)
-      		    	    {
-      		    	      m=m+$scope.my_Channel_List[i].id+","; 	
-      		    	    }
-      		      	}
-      			  	rec = {favourities:m}
-      				$http({
-      						url:"addFavourities",
-      						method:"post",
-      						data:rec
-      					  }).then(function(res){
-    						  	console.log(rec);
-      			     			alert("channels added to favourities");
-      			 			});
-      			
+              		$http.post("deleteFeedback",x).then(function(resp)
+              				{
+              					alert("Feedback Deleted!!")
+              				});
               		
               	}
-              	
-              	
-                            	
-             });
+              });
               
      </script> 	
     <style>
         .navbar-expand-sm
 		{
-		  background-color:rgba(40,57,101);
+		  background-color:rgb(128,0,0);
 		  position: fixed;
 		}
 		.nav.navbar-nav.navbar-right li a,
@@ -94,6 +57,10 @@
 		{
 		  color: aliceblue;
 		  font-size: large
+		}
+		.nav-link
+		{
+			text-transform : uppercase;
 		}
 		
 		body
@@ -132,7 +99,7 @@
 		    top: 0;
 		    overflow-x: hidden;
 		    padding-top: 20px;
-		  background:rgba(40,57,101,.8);
+		  background:rgb(128,0,0,.8);
 		
 		
 		}
@@ -143,9 +110,9 @@
 		  height : 100%;
 		  width :80%;
 		  position: fixed;
-		  z-index: 1;
-		  top: 0;
-		   overflow-x: hidden;
+		    z-index: 1;
+		    top: 0;
+		    overflow-x: hidden;
 		    padding-top: 20px;
 		  
 		  right:0;
@@ -171,6 +138,8 @@
 		    
 		
 		  }
+		  
+		  
 .centered2 
 {
     position: absolute;
@@ -178,13 +147,12 @@
     text-align: center;
 }		  
 		  
-		  
 .add_channel_descripton
 {
     font: 'Open Sans',sans-serif;
     font-size: 20px;
     text-align: center;
-    color: rgba(40,57,101);
+    color: rgb(128,0,0);
     padding-top: 5px;
     padding-top: 5px;
     padding-left : 50px
@@ -200,7 +168,7 @@
     font: 'Open Sans',sans-serif;
     font-size: 40px;
     text-align: center;
-    color: rgba(40,57,101);
+    color: rgb(128,0,0);
     padding-top: 5px;
     padding-top: 5px;
     padding-left : 50px
@@ -211,21 +179,25 @@
     position:sticky;
     top : 0;
     background-color: white; 
-    color:rgba(40,57,101); 
-    border: 2px solid rgba(40,57,101);
+    color:rgb(128,0,0); 
+    border: 2px solid rgb(128,0,0);
     font: 'Open Sans',sans-serif;
-    font-size: 15px;
-    padding:10px;
+    font-size: 10px;
+    padding:5px;
     
 }
 .add_channel_click:hover
 {
-    background-color:rgba(40,57,101);
+    background-color:rgb(128,0,0);
     color: white;
 }
 
 
- 
+
+
+		  
+		  
+		  
 		</style>
 	</head>
 	<body ng-app="newshunt">
@@ -240,7 +212,7 @@
         
         		<ul class="nav navbar-nav navbar-right ">
             		<li class="nav-item">
-               				<a class="nav-link" href="#">SURBHI</a>
+               				<a class="nav-link" href="#">{{userData.name}}</a>
             		</li>
         		</ul>
     		</nav>
@@ -258,25 +230,30 @@
         	</div>
         <div class="right">
             <div class="centered2">
-            
-	            <br><br><br>
-	            
-	             <button align="right" class="btn btn-default add_channel_click" ng-click="unsuscribe()">UNSUBSCRIBE</button>
- 				<button align="right" class="btn btn-default add_channel_click"ng-click="favourities()">ADD FAVOURITIES</button>
-                               
-                <br><br><br>
-                <div class ="module" ng-repeat="x in my_Channel_List">
-            
-                  	<div class="border_to_div">
-            
-                        <img src="{{x.image}}"align="left" height="100" width="100">
-                        <label class="add_channel_heading">{{x.title}}</label><br>
-                        <br>
-                        <label class="add_channel_descripton">{{x.description}}</label><br><br>
-                        <input id="check" type="checkbox" class="check" ng-model="x.selected">
-                        
-                    </div><br><br><br>
-                </div>
+            <br><br><br>
+                <div class ="module" >
+                  	<table class="table table-hover">
+					    <thead>
+					      <tr>
+					        <th>ID</th>
+					        <th>EMAIL</th>
+					        <th>SUBJECT</th>
+					        <th>QUERRY</th>
+					      
+					      </tr>
+					    </thead>
+					    <tbody ng-repeat="x in feedbackList">
+					      <tr>
+					        <td>{{x.id}}</td>
+					        <td>{{x.email}}</td>
+					        <td>{{x.subject}}</td>
+					        <td>{{x.querry}}</td>
+					        <td><button align="right" class="btn btn-default add_channel_click" ng-click="del(x)">DELETE</button></td>
+					      </tr>
+					      
+					    </tbody>
+					  </table>                 
+					</div>
             </div>
         </div>
     </div>

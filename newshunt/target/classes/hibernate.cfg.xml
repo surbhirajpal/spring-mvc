@@ -31,6 +31,8 @@
       <mapping class = "com.newshunt.daomodel.MenuDao"/>
       <mapping class = "com.newshunt.daomodel.AddingChannel"/>
       <mapping class = "com.newshunt.daomodel.feedbackDao"/>
+      <mapping class = "com.newshunt.daomodel.AdminMenuDao"/>
+      
       
    </session-factory>
 </hibernate-configuration>

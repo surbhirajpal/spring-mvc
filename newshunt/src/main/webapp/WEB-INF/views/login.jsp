@@ -43,11 +43,18 @@
             						{
             							alert("invalid username or password");
             						}
-            					else
+            					else if(res.data==1)
             						{
             			
             							$window.location.href="home";
             						}
+            					else if(res.data==2)
+            						{
+            							$window.location.href="adminHome";
+            							
+            						}
+            				
+            					
         
             			
             				});

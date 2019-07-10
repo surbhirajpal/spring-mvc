@@ -28,6 +28,12 @@
 							$scope.addchannel = req.data;
 					
 					});
+					$http.post("fetchMyInfo").then(function(resp)
+					{
+							$scope.userData=resp.data;						
+				
+					});
+					
 
 
               	 }
@@ -70,6 +76,10 @@
 		{
 		  color: aliceblue;
 		  font-size: large
+		}
+		.nav-link
+		{
+			text-transform:uppercase;
 		}
 		
 		body
@@ -218,7 +228,7 @@
         
         		<ul class="nav navbar-nav navbar-right ">
             		<li class="nav-item">
-               				<a class="nav-link" href="#">SURBHI</a>
+               				<a class="nav-link" >{{userData.name}}</a>
             		</li>
         		</ul>
     		</nav>
